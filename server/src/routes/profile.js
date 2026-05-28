@@ -4,7 +4,7 @@ const authenticate = require('../middleware/authMiddleware');
 const { validateRouter,asyncHandler } = require('../helper/validator');
 const { success, failed } = require('../helper/response');
 const { getProfileId, updateProfile } = require('../services/profileService');
-const upload = require('../middleware/uploadConfig');
+const upload = require('../middleware/claudUpload');
 const { roleCheck } = require('../middleware/roleMiddleware');
 
 
@@ -20,7 +20,7 @@ router.put('/', authenticate, roleCheck(['user', 'admin']), upload.single('photo
     const { gender, phone_number, address, date_of_birth } = req.body;
     let photo_url = req.body.photo_url || null;
     if(req.file){
-        photo_url = `/uploads/profiles/${req.file.filename}`;
+        photo_url = req.file.path ? req.file.path : `/uploads/profiles/${req.file.filename}`;
     }
     const updatedProfile = await updateProfile(user_id, { gender, phone_number, address, date_of_birth, photo_url });
     return success(res, { profile: updatedProfile }, 'Profil berhasil diperbarui');

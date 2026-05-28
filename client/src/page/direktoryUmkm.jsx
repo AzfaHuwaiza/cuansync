@@ -64,7 +64,7 @@ export default function DirektoryUMKM() {
                         <div className="w-16 h-16 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
                             {row.img ? (
                                 <img
-                                    src={`${serverBaseUrl}${row.img}`}
+                                    src={row.img?.startsWith('http') ? row.img : `${serverBaseUrl}${row.img}`}
                                     alt={row.namaUmkm}
                                     className="w-full h-full object-cover"
                                 />

@@ -98,7 +98,7 @@ export default function AdminDashboard(){
                                     {umkmList.map((umkm) => (
                                         <div key={umkm.id} className="flex items-center gap-4 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/60 rounded-xl transition-colors cursor-pointer">
                                             <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg shrink-0 flex items-center justify-center overflow-hidden">
-                                                <img src={umkm.photo ? `${serverBaseUrl}${umkm.photo}` : FotoDefault} alt="" className="w-full h-full" />
+                                                <img src={umkm.photo ? umkm.photo?.startsWith('http') ? umkm.photo : `${serverBaseUrl}${umkm.photo}` : FotoDefault} alt="" className="w-full h-full" />
                                             </div>
 
                                             <div>
@@ -124,7 +124,7 @@ export default function AdminDashboard(){
                                                     {/* NAMA INISIAL */}
                                                     <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold shrink-0">
                                                         {user.img ? (
-                                                            <img src={`${serverBaseUrl}${user.img}`} alt={user.nama.charAt(0).toUpperCase()} className="w-full h-full rounded-full" />
+                                                            <img src={user.img?.startsWith('http') ? user.img : `${serverBaseUrl}${user.img}`} alt={user.nama.charAt(0).toUpperCase()} className="w-full h-full rounded-full" />
                                                         ) : (
                                                             user.nama.charAt(0).toUpperCase()
                                                         )}

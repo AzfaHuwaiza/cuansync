@@ -28,13 +28,6 @@ const updateProfile = async (user_id, data) => {
 
         const finalFoto = data.photo_url ? data.photo_url : existing[0].photo_url;
 
-        if(data.photo_url && existing[0].photo_url && existing[0].photo_url !== '/uploads/profiles/default.png'){
-            const relativeOld = String(existing[0].photo_url).replace(/^\/+/, '');
-            const oldPhotoPath = path.join(process.cwd(), 'public', relativeOld);
-            if(fs.existsSync(oldPhotoPath)){
-                fs.unlinkSync(oldPhotoPath);
-            }
-        }
         return { user_id, ...data, photo_url: finalFoto};
     }
 };

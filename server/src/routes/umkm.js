@@ -4,7 +4,7 @@ const { validateRouter, asyncHandler } = require('../helper/validator');
 const { success, failed } = require('../helper/response');
 const authenticate = require('../middleware/authMiddleware');
 const router = require('express').Router();
-const upload = require('../middleware/uploadConfig');
+const upload = require('../middleware/claudUpload');
 const { roleCheck } = require('../middleware/roleMiddleware');
 
 
@@ -46,7 +46,7 @@ router.post('/',authenticate, upload.single('photo'),   validateRouter(validateU
     const { name, sector, description } = req.body;
     let photo_url = req.body.photo_url || null;
     if(req.file){
-        photo_url = `/uploads/umkm/${req.file.filename}`;
+        photo_url = req.file.path ? req.file.path : `/uploads/umkm/${req.file.filename}`;
     }
 
     const newUmkm = await createUMKM(user_id, name, sector, description, photo_url);
@@ -59,7 +59,7 @@ router.put('/:id',authenticate, upload.single('photo'),   validateRouter(validat
     const { name, sector, description } = req.body;
     let photo_url = req.body.photo_url || null;
     if(req.file){
-        photo_url = `/uploads/umkm/${req.file.filename}`;
+        photo_url = `/uploads/umkm/${req.file.path}`;
     }
     const existingUmkm = await getUMKMById(id);
     if(!existingUmkm) return failed(res, 'UMKM tidak ditemukan', 404);

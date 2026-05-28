@@ -134,7 +134,7 @@ export default function ProfileUser({ isReadOnly = false }) {
                             {/* Avatar */}
                             <div className="relative group w-24 h-24 rounded-full bg-emerald-100 dark:bg-slate-700 border-2 border-emerald-200 dark:border-slate-600 flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-4xl font-bold shrink-0 overflow-hidden">
                                 {profile.img ? (
-                                    <img src={profile.img?.startsWith('blob:') ? profile.img : `${serverBaseUrl}${profile.img}`} alt="Profile" className="w-full h-full object-cover" />
+                                    <img src={profile.img?.startsWith('blob:') || profile.img?.startsWith('http') ? profile.img : `${serverBaseUrl}${profile.img}`} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (
                                     profile.name ? profile.name.charAt(0).toUpperCase() : 'U'
                                 )}

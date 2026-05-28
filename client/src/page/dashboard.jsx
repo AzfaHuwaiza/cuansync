@@ -106,7 +106,7 @@ export default function Dashboard(){
                     {/* Profile Card */}
                     <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-6 flex justify-between items-center mb-8">
                         <div className="flex items-center gap-4">
-                            <img src={activeUmkmData?.photo_url ? `${serverBaseUrl}${activeUmkmData.photo_url}` : FotoDefault} className="w-16 h-16 object-cover rounded-xl border border-slate-200 dark:border-slate-700" />
+                            <img src={activeUmkmData?.photo_url?.startsWith('http') ? activeUmkmData.photo_url : `${serverBaseUrl}${activeUmkmData?.photo_url}`} alt={activeUmkmData?.nama_umkm} className="w-16 h-16 object-cover rounded-xl border border-slate-200 dark:border-slate-700" />
                             <div>
                                 <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">{activeUmkmData?.nama_umkm || 'UMKM Belum Ada'}</h2>
                                 <p className="text-sm text-slate-500 dark:text-slate-400">{activeUmkmData?.sector || ''}</p>

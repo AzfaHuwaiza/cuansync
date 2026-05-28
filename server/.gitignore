@@ -1,0 +1,19 @@
+# Mengabaikan folder dependencies (terlalu besar dan bisa di-install ulang lewat npm install)
+node_modules/
+
+# Mengabaikan file konfigurasi rahasia
+.env
+.env.local
+.env.production
+
+# Mengabaikan log error
+*.log
+npm-debug.log*
+
+# Mengabaikan folder hasil build (jika kamu pakai TypeScript atau bundler seperti Babel)
+dist/
+build/
+
+# Mengabaikan file sistem operasi (Mac/Windows)
+.DS_Store
+Thumbs.db

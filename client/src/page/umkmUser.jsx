@@ -153,7 +153,7 @@ export default function UmkmUser() {
                                         {/* IMAGE */}
                                         <div className="bg-slate-100 dark:bg-slate-700 relative h-44 flex items-center justify-center">
                                             {u.photo_url ? (
-                                                <img src={serverBaseUrl + u.photo_url} alt={u.nama_umkm} className="w-full h-full object-cover" />
+                                                <img src={u.photo_url?.startsWith('http') ? u.photo_url : `${serverBaseUrl}${u.photo_url}`} alt={u.nama_umkm} className="w-full h-full object-cover" />
                                             ) : (
                                                 <IoStorefront className="text-slate-300 dark:text-slate-600" size={48} />
                                             )}

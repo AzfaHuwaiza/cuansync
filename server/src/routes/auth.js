@@ -22,15 +22,15 @@ router.post('/login', asyncHandler(async (req, res) => {
 
     res.cookie('accessToken', tokens.accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: 15 * 60 * 1000
     });
 
     res.cookie('refreshToken', tokens.refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: 7 * 24 * 60 * 60 * 1000
     })
 
@@ -47,8 +47,8 @@ router.put('/refresh-token', asyncHandler(async (req, res) => {
 
     res.cookie('accessToken', accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: 15 * 60 * 1000
     });
     return success(res, { accessToken }, 'Access token berhasil diperbarui');
@@ -60,8 +60,8 @@ router.delete('/logout', authenticate, asyncHandler(async (req, res) => {
     if(!refreshToken) return failed(res, 'Refresh token harus diisi', 400);
 
     await logoutUser(refreshToken);
-    res.clearCookie('accessToken');
-    res.clearCookie('refreshToken');
+    res.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'none' });
+    res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'none' });
     return success(res,'Logout berhasil');
 }));
 

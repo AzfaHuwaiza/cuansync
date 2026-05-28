@@ -8,7 +8,6 @@ const helmet = require('helmet');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
@@ -31,6 +30,9 @@ app.use((req,res) => {
 });
 
 app.use(erorHandler);
-app.listen(PORT, () =>{
-    console.log(`SERVER : http://localhost:${PORT}`);
-})
+if(process.env.NODE_ENV !== 'production') {
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, () => console.log(`Server berjalan di PORT : ${PORT}`));
+}
+
+module.exports = app;

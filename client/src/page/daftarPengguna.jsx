@@ -42,7 +42,7 @@ export default function DaftarPengguna() {
             <div className="flex items-center gap-4">
                 <div className="w-15 h-15 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center overflow-hidden shrink-0">
                     {row.img ? (
-                        <img src={`${serverBaseUrl}${row.img}`} alt={row.name} className="w-full h-full object-cover" />
+                        <img src={row.img?.startsWith('http') ? row.img : `${serverBaseUrl}${row.img}`} alt={row.name} className="w-full h-full object-cover" />
                     ) : (
                         <FaRegUser size={30} className="text-slate-400 dark:text-slate-500" />
                     )}

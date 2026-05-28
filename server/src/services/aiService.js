@@ -48,7 +48,7 @@ const sendMessageWithRetry = async (chat, message, retries = 3) => {
             const isOverloaded = err.message.includes('503') || err.message.includes('Service Unavailable');
             const isRateLimited = err.message.includes('429') || err.message.includes('Quota exceeded');
             if (isRateLimited) {
-                console.log("⚠️ Limit harian Google lu habis bosku!");
+                console.log('⚠️ Limit harian Google lu habis bosku!');
                 throw err; 
             }
 
@@ -76,7 +76,7 @@ const getPredictionFromFastAPI = async (sectorName, historyData) => {
         
         return response.data; 
     } catch (error) {
-        console.error("FastAPI Error Logging:", error.response?.data?.detail || error.message);
+        console.error('FastAPI Error Logging:', error.response?.data?.detail || error.message);
         return null; // Return null biar kalo ML mati, Gemini tetep jalan
     }
 };
@@ -94,13 +94,13 @@ const processAiKonsulResponse = async (umkmId, userMessage, chatHistory) => {
     const predictionResult = await getPredictionFromFastAPI(umkm.sector, history30Days);
 
     let systemContext = `
-        Kamu adalah "CuanSync Advisor", asisten keuangan AI yang santai, empatik, tapi profesional.
+        Kamu adalah 'CuanSync Advisor', asisten keuangan AI yang santai, empatik, tapi profesional.
         Nama UMKM: ${umkm.nama_umkm} (Sektor: ${umkm.sector}). Pemilik: ${umkm.nama_owner || 'Bosku'}.
         Kondisi Keuangan Saat Ini: Pemasukan Rp${totalIncome.toLocaleString('id-ID')}, Pengeluaran Rp${totalExpense.toLocaleString('id-ID')}, Saldo Bersih Rp${saldoBersih.toLocaleString('id-ID')}.
     `;
 
     // Kalau FastAPI berhasil jawab, masukin data prediksinya ke otak Gemini!
-    if (predictionResult && predictionResult.status === "success") {
+    if (predictionResult && predictionResult.status === 'success') {
         systemContext += `
         Berdasarkan model AI Prediksi Arus Kas:
         - Prediksi Arus Kas Bersih (Net Cash Flow) Besok: Rp${predictionResult.predicted_next_day_net_cash_flow.toLocaleString('id-ID')}
@@ -128,8 +128,8 @@ const processAiKonsulResponse = async (umkmId, userMessage, chatHistory) => {
         return result.response.text();
 
     } catch (error) {
-        console.error("Gemini SDK Error:", error.message);
-        return "Maaf bosku, AI kami sedang mengalami sedikit gangguan. Silakan coba lagi sebentar ya!";
+        console.error('Gemini SDK Error:', error.message);
+        return 'Maaf bosku, AI kami sedang mengalami sedikit gangguan. Silakan coba lagi sebentar ya!';
     }
 }
 
