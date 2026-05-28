@@ -1,0 +1,24 @@
+{
+  // Force IntelliSense + snippets to be enabled in this workspace
+  "editor.suggest.enabled": true,
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.snippetSuggestions": "inline",
+  "editor.tabCompletion": "on",
+
+  // Ensure React JSX files get the right language service
+  "files.associations": {
+    "*.jsx": "javascriptreact",
+    "*.tsx": "typescriptreact"
+  },
+
+  // Keep TS/JS language service features on
+  "javascript.suggest.enabled": true,
+  "typescript.suggest.enabled": true,
+  "javascript.validate.enable": true,
+  "typescript.validate.enable": true
+}
