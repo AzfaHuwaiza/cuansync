@@ -10,7 +10,7 @@ export default function Register(){
         email: "",
         password: "",
         name: "",
-        role: "",
+        role: "user",
     });
     const navigate = useNavigate();
 
@@ -47,11 +47,6 @@ export default function Register(){
         { id: 'email', label: 'Email', type: 'email', placeholder: 'Contoh: user@example.com', autoComplete: 'nope' },
         { id: 'password', label: 'Password', type: 'password', placeholder: 'Masukkan password', autoComplete: 'new-password' },
         { id: 'name', label: 'Name', type: 'text', placeholder: 'Masukkan nama lengkap', autoComplete: 'nope' },
-        { id: 'role', label: 'Role', type: 'select', options: [
-            { value: '', label: 'Pilih Role' },
-            { value: 'user', label: 'User' },
-            { value: 'admin', label: 'Admin' }
-        ], hidden: true },
     ]
 
     return(
