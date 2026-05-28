@@ -51,7 +51,7 @@ export default function Register(){
             { value: '', label: 'Pilih Role' },
             { value: 'user', label: 'User' },
             { value: 'admin', label: 'Admin' }
-        ]},
+        ], hidden: true },
     ]
 
     return(

@@ -20,7 +20,7 @@ router.put('/', authenticate, roleCheck(['user', 'admin']), upload.single('photo
     const { gender, phone_number, address, date_of_birth } = req.body;
     let photo_url = req.body.photo_url || null;
     if(req.file){
-        photo_url = req.file.path ? req.file.path : `/uploads/profiles/${req.file.filename}`;
+        photo_url = req.file.path || req.file.secure_url || req.file.url || null;
     }
     const updatedProfile = await updateProfile(user_id, { gender, phone_number, address, date_of_birth, photo_url });
     return success(res, { profile: updatedProfile }, 'Profil berhasil diperbarui');

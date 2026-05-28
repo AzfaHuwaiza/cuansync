@@ -30,7 +30,7 @@ export default function Form({ title, fields, formData, handleChange, onSubmit, 
                                         value={formData[field.id] || ''}
                                         required={field.required !== false}
                                         onChange={handleChange}
-                                        className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-400/30"
+                                        className={`block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-400 dark:focus:ring-blue-400/30 ${field.hidden ? 'hidden' : ''}`}
                                     >
                                         {field.options.map(opt => (
                                             <option key={opt.value} value={opt.value}>
@@ -47,7 +47,7 @@ export default function Form({ title, fields, formData, handleChange, onSubmit, 
                                         value={field.type === 'file' ? undefined : formData[field.id] || ''}
                                         onChange={handleChange}
                                         accept={field.accept}
-                                        className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/30"
+                                        className={`w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/30 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-blue-400 dark:focus:ring-blue-400/30 ${field.hidden ? 'hidden' : ''}`}
                                         autoComplete={field.autoComplete || 'off'}
                                         hidden={field.hidden}
                                     />

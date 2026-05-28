@@ -46,7 +46,7 @@ router.post('/',authenticate, upload.single('photo'),   validateRouter(validateU
     const { name, sector, description } = req.body;
     let photo_url = req.body.photo_url || null;
     if(req.file){
-        photo_url = req.file.path ? req.file.path : `/uploads/umkm/${req.file.filename}`;
+        photo_url = req.file.path || req.file.secure_url || req.file.url || null;
     }
 
     const newUmkm = await createUMKM(user_id, name, sector, description, photo_url);
@@ -59,7 +59,7 @@ router.put('/:id',authenticate, upload.single('photo'),   validateRouter(validat
     const { name, sector, description } = req.body;
     let photo_url = req.body.photo_url || null;
     if(req.file){
-        photo_url = `/uploads/umkm/${req.file.path}`;
+        photo_url = req.file.path || req.file.secure_url || req.file.url || null;
     }
     const existingUmkm = await getUMKMById(id);
     if(!existingUmkm) return failed(res, 'UMKM tidak ditemukan', 404);
