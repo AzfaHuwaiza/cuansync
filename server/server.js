@@ -13,7 +13,7 @@ app.use(helmet({
   crossOriginResourcePolicy: false,
 }));
 app.use(cors({
-    origin: 'http://localhost:5173', // Izinkan port React kamu
+    origin: ['http://localhost:5173', 'https://cuansync-iqbalsypk-three.vercel.app'], // Izinkan port React kamu
     credentials: true 
 }));
 
