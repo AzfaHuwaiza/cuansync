@@ -1,6 +1,6 @@
 # 🚀 CuanSync - Solusi Cerdas Manajemen UMKM
 
-## 1. Deskripsi Singkat Project
+![CuanSync Banner](./link-gambar-banner-atau-login.jpg) ## 1. Deskripsi Singkat Project
 **CuanSync** adalah aplikasi berbasis *web* (Full-Stack) yang dirancang khusus untuk membantu para pelaku UMKM (Usaha Mikro, Kecil, dan Menengah) dalam mengelola bisnis mereka secara digital. Aplikasi ini memungkinkan pengguna untuk memantau statistik keuangan (pemasukan & pengeluaran), mengelola daftar produk, mencatat laporan transaksi kas, hingga membangun jejaring bisnis antar sesama UMKM. 
 
 Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediksi arus kas dan rekomendasi bisnis secara pintar.
@@ -25,9 +25,10 @@ Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediks
 ## 📸 *Screenshots* Aplikasi
 
 | Halaman Login | Halaman Register |
-| ![Login](<img width="1919" height="871" alt="image" src="https://github.com/user-attachments/assets/6105e1ba-966b-4621-a1a6-90e6066dc43a" />
-) | ![Register](<img width="1919" height="874" alt="image" src="https://github.com/user-attachments/assets/12a92531-44e1-4436-ac34-4472f16fdbd6" />
-) |
+| :<img width="1919" height="870" alt="image" src="https://github.com/user-attachments/assets/c9bdf0ff-e045-4a3f-a253-f64354b359de" />
+: | :<img width="1919" height="872" alt="image" src="https://github.com/user-attachments/assets/0aa1a923-fd41-4612-a75e-ea23fda5f186" />
+: |
+
 
 | Dashboard UMKM | Laporan Transaksi |
 | :---: | :---: |
