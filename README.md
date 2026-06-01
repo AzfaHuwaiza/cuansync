@@ -40,13 +40,13 @@ Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediks
 | :---: | :---: |
 | <img width="500" alt="Transaksi" src="https://github.com/user-attachments/assets/ea771870-7600-466d-934e-830b47b2851c" /> | <img width="500" alt="Produk" src="https://github.com/user-attachments/assets/c5a29bf7-9185-45d4-925d-01046552542d" /> |
 
-| Jejaring Bisnis | Detail Jejaring |
+| Konsultasi CuanAI | Jejaring Bisnis |
 | :---: | :---: |
-| <img width="500" alt="Jejaring" src="https://github.com/user-attachments/assets/43ecea86-5f36-48fc-8ca4-f568bb674a3c" /> | <img width="500" alt="Detail Jejaring" src="https://github.com/user-attachments/assets/6fdbfc0f-b2a9-44c2-a15c-32a2f4dd26db" /> |
+| <img width="500" alt="Konsultasi AI" src="https://github.com/user-attachments/assets/433fc43d-38c4-4dc9-8663-a1d31007cf34" /> | <img width="500" alt="Jejaring Bisnis" src="https://github.com/user-attachments/assets/43ecea86-5f36-48fc-8ca4-f568bb674a3c" /> |
 
-| Profil User | Tampilan Tambahan |
+| Detail Jejaring | Profil User |
 | :---: | :---: |
-| <img width="500" alt="Profil" src="https://github.com/user-attachments/assets/e0fb4f98-1c30-4ee0-8687-c0b62a9a4dfa" /> | <img width="500" alt="Tambahan" src="https://github.com/user-attachments/assets/c9d5c408-f634-4929-8136-e042f11e17d7" /> |
+| <img width="500" alt="Detail Jejaring" src="https://github.com/user-attachments/assets/6fdbfc0f-b2a9-44c2-a15c-32a2f4dd26db" /> | <img width="500" alt="Profil User" src="https://github.com/user-attachments/assets/e0fb4f98-1c30-4ee0-8687-c0b62a9a4dfa" /> |
 
 ---
 
