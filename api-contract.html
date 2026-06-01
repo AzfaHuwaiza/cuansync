@@ -32,31 +32,50 @@
 <body>
   <header>
     <h1>API Contract — Capstone Project</h1>
-    <div class="muted">Dokumentasi endpoint backend (Express) berdasarkan folder <code>server/src/routes</code>, validator (<code>Joi</code>), helper response, dan middleware yang ada.</div>
+    <div class="muted">
+      Dokumentasi endpoint backend (Express) berdasarkan implementasi di folder <code>server/</code>
+      (router: <code>server/src/routes</code>, validator: <code>server/src/validator</code>, middleware auth/role, dan helper response).
+    </div>
   </header>
 
   <main>
     <section class="card">
-      <h2 id="base">Base URL & Konvensi</h2>
+      <h2 id="base">Base URL &amp; Konvensi</h2>
       <div class="grid">
         <div><strong>Base API</strong></div>
-        <div><code>http://localhost:3000/api</code> <span class="muted">(default; mengikuti <code>PORT</code> di <code>server/server.js</code>)</span></div>
-
-        <div><strong>Static uploads</strong></div>
-        <div><code>http://localhost:3000/uploads</code> (folder fisik: <code>server/public/uploads</code>)</div>
-
-        <div><strong>Auth (backend)</strong></div>
         <div>
-          Backend menggunakan <strong>httpOnly cookies</strong>:
+          <code>http://localhost:5000/api</code>
+          <span class="muted">(default: <code>PORT</code> env, fallback <code>5000</code> di <code>server/server.js</code>)</span>
+        </div>
+
+        <div><strong>Mounting</strong></div>
+        <div>
+          Semua endpoint ini dimount dari <code>server/server.js</code> ke <code>/api/</code>.
+          Router yang tersedia (lihat <code>server/src/routes/index.js</code>):
           <ul>
-            <li><code>accessToken</code> (15 menit)</li>
-            <li><code>refreshToken</code> (7 hari)</li>
+            <li><code>/api/auth</code></li>
+            <li><code>/api/profile</code></li>
+            <li><code>/api/umkm</code></li>
+            <li><code>/api/product</code></li>
+            <li><code>/api/transaction</code></li>
+            <li><code>/api/chatKonsul</code></li>
           </ul>
-          Untuk client (fetch/axios) wajib mengaktifkan cookie:
+        </div>
+
+        <div><strong>Auth (cookie)</strong></div>
+        <div>
+          Backend menggunakan <strong>httpOnly cookies</strong> (bukan header Bearer). Middleware auth membaca token dari
+          <code>req.cookies.accessToken</code>.
+          <ul>
+            <li><code>accessToken</code> (JWT, ~15 menit)</li>
+            <li><code>refreshToken</code> (~7 hari)</li>
+          </ul>
+          Client wajib mengirim cookie:
           <ul>
             <li>fetch: <code>credentials: 'include'</code></li>
             <li>axios: <code>withCredentials: true</code></li>
           </ul>
+          <div class="muted">Catatan: cookie saat login diset dengan <code>secure: true</code> dan <code>sameSite: 'none'</code>.</div>
         </div>
 
         <div><strong>Format sukses</strong></div>
@@ -64,11 +83,11 @@
           <pre>{
   "status": "success",
   "message": "...",
-  "data": { }
+  "data": {}
 }</pre>
         </div>
 
-        <div><strong>Format gagal (umum)</strong></div>
+        <div><strong>Format gagal (helper)</strong></div>
         <div>
           <pre>{
   "status": "failed",
@@ -76,7 +95,7 @@
 }</pre>
         </div>
 
-        <div><strong>Format gagal validasi (Joi)</strong></div>
+        <div><strong>Gagal validasi (Joi)</strong></div>
         <div>
           <pre>{
   "status": "failed",
@@ -87,12 +106,29 @@
 }</pre>
         </div>
 
-        <div><strong>Format error server (500)</strong></div>
+        <div><strong>404 (global)</strong></div>
+        <div>
+          <pre>{
+  "status": "failed",
+  "message": "Halaman yang kamu cari tidak ditemukan"
+}</pre>
+        </div>
+
+        <div><strong>500 (server)</strong></div>
         <div>
           <pre>{
   "status": "Error",
   "message": "Terjadi kesalahan di server"
 }</pre>
+        </div>
+
+        <div><strong>Static uploads</strong></div>
+        <div>
+          Server mengekspose <code>server/public/uploads</code> via <code>/uploads</code>:
+          <ul>
+            <li><code>http://localhost:5000/uploads</code></li>
+          </ul>
+          <div class="muted">Namun upload foto UMKM/Profile saat ini memakai Cloudinary via <code>server/src/middleware/claudUpload.js</code>, sehingga <code>photo_url</code> biasanya berupa URL Cloudinary.</div>
         </div>
       </div>
     </section>
@@ -105,6 +141,7 @@
         <a href="#umkm">UMKM</a><br />
         <a href="#product">Product</a><br />
         <a href="#transaction">Transaction</a><br />
+        <a href="#ai">AI Konsultasi &amp; Prediksi</a><br />
         <a href="#uploads">Uploads (Static)</a><br />
       </div>
     </section>
@@ -122,30 +159,14 @@
             <li><code>email</code> (string, email)</li>
             <li><code>name</code> (string, min 3)</li>
             <li><code>password</code> (string, min 6)</li>
+            <li><code>role</code> (string, required; <code>admin</code> | <code>user</code>)</li>
           </ul>
         </td></tr>
         <tr><th>Response 201</th><td>
           <pre>{
   "status": "success",
   "message": "Daftar berhasil",
-  "data": { "user": "USR001" }
-}</pre>
-        </td></tr>
-        <tr><th>Response 400 (validasi)</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Validasi Gagal",
-  "errors": {
-    "email": "Email tidak valid",
-    "name": "Nama minimal 3 karakter",
-    "password": "Password minimal 6 karakter"
-  }
-}</pre>
-        </td></tr>
-        <tr><th>Response 400 (email sudah ada)</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Email sudah terdaftar, silahkan gunakan yang lain"
+  "data": { "user": "(hasil registerUser)" }
 }</pre>
         </td></tr>
       </table>
@@ -160,30 +181,18 @@
             <li><code>password</code> (string, required)</li>
           </ul>
         </td></tr>
-        <tr><th>Cookies</th><td>Server akan set <code>accessToken</code> &amp; <code>refreshToken</code> via <code>Set-Cookie</code> (httpOnly)</td></tr>
+        <tr><th>Cookies</th><td>Server akan set <code>accessToken</code> &amp; <code>refreshToken</code> (httpOnly)</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Login berhasil",
-  "data": {
-    "data": {
-      "accessToken": "...",
-      "refreshToken": "...",
-      "id": "USR001"
-    }
-  }
+  "data": { "data": { "accessToken": "...", "refreshToken": "..." } }
 }</pre>
         </td></tr>
-        <tr><th>Response 400 (field kosong)</th><td>
+        <tr><th>Response 400</th><td>
           <pre>{
   "status": "failed",
   "message": "Email dan password harus diisi"
-}</pre>
-        </td></tr>
-        <tr><th>Response 401</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Email atau password salah"
 }</pre>
         </td></tr>
       </table>
@@ -198,7 +207,7 @@
             <li><code>id_user</code> (string, required)</li>
           </ul>
         </td></tr>
-        <tr><th>Set-Cookie</th><td>Jika sukses, server akan set cookie <code>accessToken</code> baru (httpOnly)</td></tr>
+        <tr><th>Set-Cookie</th><td>Jika sukses, server set cookie <code>accessToken</code> baru (httpOnly)</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
@@ -206,24 +215,12 @@
   "data": { "accessToken": "..." }
 }</pre>
         </td></tr>
-        <tr><th>Response 400 (field kosong)</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Refresh token dan ID user harus diisi"
-}</pre>
-        </td></tr>
-        <tr><th>Response 401</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Refresh token tidak valid atau sudah expired"
-}</pre>
-        </td></tr>
       </table>
 
       <h3 id="auth-logout"><span class="pill method">DELETE</span> <code>/auth/logout</code></h3>
       <table>
-        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> (httpOnly)</td></tr>
-        <tr><th>Cookies</th><td>Wajib ada cookie <code>refreshToken</code> (httpOnly). Tidak ada body.</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Cookies</th><td>Wajib ada cookie <code>refreshToken</code>. Tidak ada body.</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
@@ -231,17 +228,11 @@
   "data": "Logout berhasil"
 }</pre>
         </td></tr>
-        <tr><th>Response 400</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Refresh token harus diisi"
-}</pre>
-        </td></tr>
       </table>
 
       <h3 id="auth-update"><span class="pill method">PUT</span> <code>/auth/update</code></h3>
       <table>
-        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> (httpOnly)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
         <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
         <tr><th>Body (required)</th><td>
           <ul>
@@ -253,13 +244,51 @@
           <pre>{
   "status": "success",
   "message": "User berhasil diperbarui",
-  "data": {
-    "user": {
-      "id": "USR001",
-      "email": "user@example.com",
-      "name": "Nama"
-    }
-  }
+  "data": { "user": "(hasil updateUser)" }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="auth-users"><span class="pill method">GET</span> <code>/auth/users</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> + role <code>admin</code></td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Total pengguna berhasil diambil",
+  "data": { "totalUsers": 0, "users": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="auth-users-all"><span class="pill method">GET</span> <code>/auth/users/all</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> + role <code>admin</code></td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Total pengguna berhasil diambil",
+  "data": { "totalUsers": 0, "users": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="auth-users-role"><span class="pill method">PUT</span> <code>/auth/users/role</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> + role <code>admin</code></td></tr>
+        <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
+        <tr><th>Body</th><td>
+          <ul>
+            <li><code>id</code> (string, required)</li>
+            <li><code>role</code> (string, required; <code>admin</code> | <code>user</code>)</li>
+          </ul>
+          <div class="muted">Jika <code>id === "USR001"</code>, server menolak (403): <code>Tidak dapat mengubah role super admin</code>.</div>
+        </td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Role user berhasil diperbarui",
+  "data": { "user": "(hasil updateRoleUser)" }
 }</pre>
         </td></tr>
       </table>
@@ -271,83 +300,42 @@
 
       <h3 id="profile-get"><span class="pill method">GET</span> <code>/profile</code></h3>
       <table>
-        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> (httpOnly)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> + role <code>user</code>/<code>admin</code></td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Profil berhasil diambil",
-  "data": {
-    "profile": {
-      "id": "PRF001",
-      "name": "Nama User",
-      "gender": "Laki-Laki",
-      "phone_number": "081234567890",
-      "address": "Alamat",
-      "date_of_birth": "2000-01-01T00:00:00.000Z",
-      "photo_url": "/uploads/profiles/1710000000000-123.png"
-    }
-  }
+  "data": { "profile": "(hasil getProfileId)" }
 }</pre>
-          <div class="muted">Jika profil belum ada, backend mengembalikan <code>404</code> dengan message <code>Profil Belum Dilengkapi</code>.</div>
+          <div class="muted">Jika profil belum ada, server mengembalikan <code>404</code> dengan message <code>Profil Belum Dilengkapi</code>.</div>
         </td></tr>
       </table>
 
       <h3 id="profile-put"><span class="pill method">PUT</span> <code>/profile</code></h3>
       <table>
-        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> (httpOnly)</td></tr>
-        <tr><th>Content-Type</th><td>
-          Disarankan <code>multipart/form-data</code> jika mengirim file. Tanpa file bisa juga <code>application/json</code>.
-        </td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> + role <code>user</code>/<code>admin</code></td></tr>
+        <tr><th>Content-Type</th><td><code>multipart/form-data</code> (route memakai <code>upload.single('photo')</code>)</td></tr>
         <tr><th>Body fields (validator)</th><td>
           <ul>
-            <li><code>gender</code> (string, required, salah satu: <code>Laki-Laki</code> | <code>Perempuan</code>)</li>
+            <li><code>gender</code> (string, required; <code>Laki-laki</code> | <code>Perempuan</code>)</li>
             <li><code>phone_number</code> (string, required; boleh kosong <code>""</code>; min 10 max 15)</li>
             <li><code>address</code> (string, required; boleh kosong <code>""</code>)</li>
-            <li><code>date_of_birth</code> (date, required; harus &lt; sekarang; format input yang umum: <code>YYYY-MM-DD</code>)</li>
+            <li><code>date_of_birth</code> (date, required; harus &lt; sekarang)</li>
             <li><code>photo</code> (file, optional; field name harus <code>photo</code>)</li>
+            <li><code>photo_url</code> (string, optional; dipakai jika tidak upload file)</li>
           </ul>
         </td></tr>
         <tr><th>Upload rules</th><td>
           <ul>
-            <li>Mime type diterima: <code>image/jpeg</code>, <code>image/jpg</code>, <code>image/png</code></li>
-            <li>Maks ukuran file: 2MB</li>
-            <li>Disimpan ke: <code>server/public/uploads/profiles</code></li>
-            <li>URL yang disimpan: <code>/uploads/profiles/&lt;filename&gt;</code></li>
+            <li>Storage: Cloudinary (via <code>multer-storage-cloudinary</code>)</li>
+            <li>Allowed formats: <code>jpg</code>, <code>jpeg</code>, <code>png</code></li>
           </ul>
         </td></tr>
-        <tr><th>Response 200 (contoh, update/create)</th><td>
+        <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Profil berhasil diperbarui",
-  "data": {
-    "profile": {
-      "user_id": "USR001",
-      "gender": "Laki-Laki",
-      "phone_number": "081234567890",
-      "address": "Alamat",
-      "date_of_birth": "2000-01-01T00:00:00.000Z",
-      "photo_url": "/uploads/profiles/1710000000000-123.png"
-    }
-  }
-}</pre>
-          <div class="muted">Catatan: jika tidak mengunggah foto, backend akan memakai default <code>/uploads/profiles/default.png</code>.</div>
-        </td></tr>
-        <tr><th>Response 400 (file type salah)</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Format file nggak didukung! Hanya JPG/PNG aja ya."
-}</pre>
-        </td></tr>
-        <tr><th>Response 400 (validasi)</th><td>
-          <pre>{
-  "status": "failed",
-  "message": "Validasi Gagal",
-  "errors": {
-    "gender": "...",
-    "phone_number": "...",
-    "address": "...",
-    "date_of_birth": "..."
-  }
+  "data": { "profile": "(hasil updateProfile)" }
 }</pre>
         </td></tr>
       </table>
@@ -359,44 +347,61 @@
 
       <h3 id="umkm-get-all"><span class="pill method">GET</span> <code>/umkm</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Daftar UMKM berhasil diambil",
-  "data": {
-    "umkm": [
-      {
-        "id": "UMKM001",
-        "nama_umkm": "Nama UMKM",
-        "sector": "Kuliner",
-        "nama_owner": "Owner",
-        "email_owner": "owner@example.com"
-      }
-    ]
-  }
+  "data": { "umkm": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="umkm-count"><span class="pill method">GET</span> <code>/umkm/umkmCount</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Total UMKM berhasil diambil",
+  "data": { "totalUMKM": 0, "umkmLast": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="umkm-user"><span class="pill method">GET</span> <code>/umkm/user</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> (user diambil dari token)</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "UMKM berhasil diambil",
+  "data": { "umkm": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="umkm-admin"><span class="pill method">GET</span> <code>/umkm/admin</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> + role <code>admin</code></td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "UMKM berhasil diambil",
+  "data": { "umkm": [] }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="umkm-get-by-id"><span class="pill method">GET</span> <code>/umkm/:id</code></h3>
       <table>
-        <tr><th>Path params</th><td><code>id</code> = ID UMKM (mis. <code>UMKM001</code>)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Path params</th><td><code>id</code> = ID UMKM</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "UMKM berhasil diambil",
-  "data": {
-    "umkm": {
-      "id": "UMKM001",
-      "nama_umkm": "Nama UMKM",
-      "sector": "Kuliner",
-      "description": "...",
-      "create_at": "...",
-      "updated_at": "...",
-      "nama_owner": "Owner",
-      "email_owner": "owner@example.com"
-    }
-  }
+  "data": { "umkm": "(hasil getUMKMById)" }
 }</pre>
         </td></tr>
         <tr><th>Response 404</th><td>
@@ -409,82 +414,57 @@
 
       <h3 id="umkm-create"><span class="pill method">POST</span> <code>/umkm</code></h3>
       <table>
-        <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Content-Type</th><td><code>multipart/form-data</code> (route memakai <code>upload.single('photo')</code>)</td></tr>
         <tr><th>Body (validator)</th><td>
           <ul>
             <li><code>name</code> (string, required)</li>
             <li><code>sector</code> (string, required; salah satu: Kerajinan, Transportasi, Pendidikan, Pertanian, Fashion, Kuliner, Teknologi, Kesehatan, Jasa, Properti)</li>
             <li><code>description</code> (string, required)</li>
           </ul>
-          <div class="muted">Catatan: <code>user_id</code> diambil dari cookie token (req.user.id), bukan dari body.</div>
+          <div class="muted">Optional upload:</div>
+          <ul>
+            <li><code>photo</code> (file, optional)</li>
+            <li><code>photo_url</code> (string, optional; dipakai jika tidak upload file)</li>
+          </ul>
         </td></tr>
         <tr><th>Response 201</th><td>
           <pre>{
   "status": "success",
   "message": "UMKM berhasil dibuat",
-  "data": {
-    "umkm": {
-      "id": "UMKM001",
-      "user_id": "USR001",
-      "name": "Nama UMKM",
-      "sector": "Kuliner",
-      "description": "Deskripsi"
-    }
-  }
+  "data": { "umkm": "(hasil createUMKM)" }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="umkm-update"><span class="pill method">PUT</span> <code>/umkm/:id</code></h3>
       <table>
-        <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
-        <tr><th>Body (validator)</th><td>Sama seperti create: <code>name</code>, <code>sector</code>, <code>description</code></td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code>; hanya pemilik UMKM</td></tr>
+        <tr><th>Content-Type</th><td><code>multipart/form-data</code> (route memakai <code>upload.single('photo')</code>)</td></tr>
+        <tr><th>Body (validator)</th><td>Sama seperti create: <code>name</code>, <code>sector</code>, <code>description</code> (+ optional <code>photo</code>/<code>photo_url</code>)</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "UMKM berhasil diperbarui",
-  "data": {
-    "umkm": {
-      "id": "UMKM001",
-      "user_id": "USR001",
-      "name": "Nama UMKM",
-      "sector": "Kuliner",
-      "description": "Deskripsi"
-    }
-  }
+  "data": { "umkm": "(hasil updateUMKM)" }
+}</pre>
+        </td></tr>
+        <tr><th>Response 403</th><td>
+          <pre>{
+  "status": "failed",
+  "message": "Anda tidak memiliki akses untuk mengubah UMKM ini"
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="umkm-delete"><span class="pill method">DELETE</span> <code>/umkm/:id</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code>; admin boleh hapus semua, user hanya miliknya</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "",
   "data": "UMKM berhasil dihapus"
-}</pre>
-        </td></tr>
-      </table>
-
-      <h3 id="umkm-by-user"><span class="pill method">GET</span> <code>/umkm/user</code></h3>
-      <table>
-        <tr><th>Auth</th><td>Cookie <code>accessToken</code> menentukan user yang sedang login</td></tr>
-        <tr><th>Response 200</th><td>
-          <pre>{
-  "status": "success",
-  "message": "UMKM berhasil diambil",
-  "data": {
-    "umkm": [
-      {
-        "id": "UMKM001",
-        "nama_umkm": "Nama UMKM",
-        "sector": "Kuliner",
-        "nama_owner": "Owner",
-        "email_owner": "owner@example.com"
-      }
-    ]
-  }
 }</pre>
         </td></tr>
       </table>
@@ -496,12 +476,13 @@
 
       <h3 id="product-create"><span class="pill method">POST</span> <code>/product</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
         <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
         <tr><th>Body (validator)</th><td>
           <ul>
             <li><code>umkm_id</code> (string, required)</li>
             <li><code>name</code> (string, required)</li>
-            <li><code>category</code> (required; salah satu: Teknologi, Pertanian, Minuman, Makanan, Elektronik, Kerajinan, Kesehatan, Pakaian, Kecantikan)</li>
+            <li><code>category</code> (string, required; allowed: Teknologi, Pertanian, Minuman, Makanan, Elektronik, Kerajinan, Kesehatan, Pakaian, Kecantikan, Logistik, Servis Kendaraan, Event Organizer, Alat Kesehatan, Suplemen, Obat Herbal, Pakaian Pria, Desain, Perawatan, Jasa Medis, Interior, Kursus Offline, Buku, Kursus Online, Dessert, Makanan Berat, Bibit, Alat Tani, Produk Olahan, Bimbel, Pelatihan, IoT, Software, Jasa IT, Servis)</li>
             <li><code>base_price</code> (number, required)</li>
           </ul>
         </td></tr>
@@ -509,78 +490,45 @@
           <pre>{
   "status": "success",
   "message": "Produk berhasil dibuat",
-  "data": {
-    "product": {
-      "id": "PRD001",
-      "umkm_id": "UMKM001",
-      "name": "Nama Produk",
-      "category": "Makanan",
-      "base_price": 15000
-    }
-  }
+  "data": { "product": "(hasil createProduct)" }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="product-get-all"><span class="pill method">GET</span> <code>/product</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Daftar produk berhasil diambil",
-  "data": {
-    "products": [
-      {
-        "id": "PRD001",
-        "nama_umkm": "Nama UMKM",
-        "nama_product": "Nama Produk",
-        "category": "Makanan",
-        "base_price": 15000
-      }
-    ]
-  }
+  "data": { "products": [] }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="product-by-umkm"><span class="pill method">GET</span> <code>/product/umkm/:umkm_id</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
         <tr><th>Path params</th><td><code>umkm_id</code> = ID UMKM</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Daftar produk UMKM berhasil diambil",
-  "data": {
-    "products": [
-      {
-        "id": "PRD001",
-        "umkm_id": "UMKM001",
-        "name": "Nama Produk",
-        "category": "Makanan",
-        "base_price": 15000
-      }
-    ]
-  }
+  "data": { "products": [] }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="product-detail"><span class="pill method">GET</span> <code>/product/detail/:id</code></h3>
       <table>
-        <tr><th>Path params</th><td><code>id</code> = ID produk (mis. <code>PRD001</code>)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Path params</th><td><code>id</code> = ID produk</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Detail produk berhasil diambil",
-  "data": {
-    "product": {
-      "id": "PRD001",
-      "umkm_id": "UMKM001",
-      "name": "Nama Produk",
-      "category": "Makanan",
-      "base_price": 15000
-    }
-  }
+  "data": { "product": "(hasil getProductById)" }
 }</pre>
         </td></tr>
         <tr><th>Response 404</th><td>
@@ -593,34 +541,47 @@
 
       <h3 id="product-update"><span class="pill method">PUT</span> <code>/product/:id</code></h3>
       <table>
-        <tr><th>Path params</th><td><code>id</code> = ID produk (mis. <code>PRD001</code>)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan produk harus milik user</td></tr>
         <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
-        <tr><th>Body (validator)</th><td>Sama seperti create: <code>umkm_id</code>, <code>name</code>, <code>category</code>, <code>base_price</code></td></tr>
+        <tr><th>Body (validator)</th><td>
+          Validator yang dipakai sama seperti create, jadi field berikut wajib ada:
+          <ul>
+            <li><code>umkm_id</code> (string, required) <span class="muted">(meski implementasi update tidak memakainya langsung, tetap harus lolos validasi)</span></li>
+            <li><code>name</code> (string, required)</li>
+            <li><code>category</code> (string, required; allowed: Teknologi, Pertanian, Minuman, Makanan, Elektronik, Kerajinan, Kesehatan, Pakaian, Kecantikan, Logistik, Servis Kendaraan, Event Organizer, Alat Kesehatan, Suplemen, Obat Herbal, Pakaian Pria, Desain, Perawatan, Jasa Medis, Interior, Kursus Offline, Buku, Kursus Online, Dessert, Makanan Berat, Bibit, Alat Tani, Produk Olahan, Bimbel, Pelatihan, IoT, Software, Jasa IT, Servis)</li>
+            <li><code>base_price</code> (number, required)</li>
+          </ul>
+        </td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Produk berhasil diperbarui",
-  "data": {
-    "product": {
-      "id": "PRD001",
-      "umkm_id": "UMKM001",
-      "name": "Nama Produk",
-      "category": "Makanan",
-      "base_price": 15000
-    }
-  }
+  "data": { "product": "(hasil updateProduct)" }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="product-delete"><span class="pill method">DELETE</span> <code>/product/:id</code></h3>
       <table>
-        <tr><th>Path params</th><td><code>id</code> = ID produk (mis. <code>PRD001</code>)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan produk harus milik user</td></tr>
+        <tr><th>Path params</th><td><code>id</code> = ID produk</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "",
-  "data": "Produk berhasil dihapus"
+  "data": "(message dari service deleteProduct)"
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="product-user"><span class="pill method">GET</span> <code>/product/user</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> (user diambil dari token)</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Daftar produk berdasarkan user berhasil diambil",
+  "data": { "products": [] }
 }</pre>
         </td></tr>
       </table>
@@ -632,12 +593,13 @@
 
       <h3 id="transaction-create"><span class="pill method">POST</span> <code>/transaction</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
         <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
         <tr><th>Body (validator)</th><td>
           <ul>
             <li><code>umkm_id</code> (string, required)</li>
-            <li><code>type</code> (string, required; salah satu: <code>INCOME</code> | <code>EXPENSE</code>)</li>
-            <li><code>amout</code> (number, required) <span class="muted">(catatan: field memang bernama <code>amout</code> di backend)</span></li>
+            <li><code>type</code> (string, required; <code>income</code> | <code>expense</code>)</li>
+            <li><code>amount</code> (number, required)</li>
             <li><code>note</code> (string, required)</li>
             <li><code>product_name</code> (string, required)</li>
           </ul>
@@ -646,52 +608,160 @@
           <pre>{
   "status": "success",
   "message": "Transaksi berhasil dibuat",
-  "data": {
-    "transaction": {
-      "id": "TRX001",
-      "umkm_id": "UMKM001",
-      "type": "INCOME",
-      "amout": 20000,
-      "note": "Catatan",
-      "product_name": "Nama Produk"
-    }
-  }
+  "data": { "transaction": "(hasil createTransaction)" }
 }</pre>
         </td></tr>
       </table>
 
-      <h3 id="transaction-get-by-umkm"><span class="pill method">GET</span> <code>/transaction/umkm/:umkm_id</code></h3>
+      <h3 id="transaction-by-umkm"><span class="pill method">GET</span> <code>/transaction/umkm/:umkm_id</code></h3>
       <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
         <tr><th>Path params</th><td><code>umkm_id</code> = ID UMKM</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "Daftar transaksi UMKM berhasil diambil",
-  "data": {
-    "transactions": [
-      {
-        "id": "TRX001",
-        "umkm_id": "UMKM001",
-        "type": "INCOME",
-        "amout": 20000,
-        "note": "Catatan",
-        "product_name": "Nama Produk",
-        "occurred_at": "2026-05-03T00:00:00.000Z"
-      }
-    ]
-  }
+  "data": { "transactions": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="transaction-total-umkm"><span class="pill method">GET</span> <code>/transaction/count/:umkm_id</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Total transaksi UMKM berhasil diambil",
+  "data": { "transactions": "(hasil getTotalTransactionsByUmkm)" }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="transaction-income"><span class="pill method">GET</span> <code>/transaction/income/:umkm_id</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Total pemasukan UMKM berhasil diambil",
+  "data": { "totalIncome": 0 }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="transaction-expense"><span class="pill method">GET</span> <code>/transaction/expense/:umkm_id</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Total pengeluaran UMKM berhasil diambil",
+  "data": { "totalExpense": 0 }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="transaction-count"><span class="pill method">GET</span> <code>/transaction/count</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Daftar transaksi berhasil diambil",
+  "data": { "transactions": "(hasil getAllCountTransactions)" }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="transaction-user"><span class="pill method">GET</span> <code>/transaction/user/:userId</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code></td></tr>
+        <tr><th>Path params</th><td><code>userId</code> ada di path, tapi server tetap mengambil user dari token (<code>req.user.id</code>).</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Daftar transaksi berhasil diambil",
+  "data": { "transactions": [] }
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="transaction-chart"><span class="pill method">GET</span> <code>/transaction/chart/:umkmId</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
+        <tr><th>Query</th><td><code>range</code> optional, default <code>1_year</code></td></tr>
+        <tr><th>Contoh</th><td><code>/transaction/chart/UMKM001?range=1_year</code></td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Data chart transaksi berhasil diambil",
+  "data": { "chartData": "(hasil getChartTransactionsByUmkm)" }
 }</pre>
         </td></tr>
       </table>
 
       <h3 id="transaction-delete"><span class="pill method">DELETE</span> <code>/transaction/:id</code></h3>
       <table>
-        <tr><th>Path params</th><td><code>id</code> = ID transaksi (mis. <code>TRX001</code>)</td></tr>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan transaksi harus milik user</td></tr>
+        <tr><th>Path params</th><td><code>id</code> = ID transaksi</td></tr>
         <tr><th>Response 200</th><td>
           <pre>{
   "status": "success",
   "message": "",
-  "data": "Transaksi berhasil dihapus"
+  "data": "(message dari service deleteTransaction)"
+}</pre>
+        </td></tr>
+      </table>
+    </section>
+
+    <section class="card" style="margin-top: 16px;">
+      <h2 id="ai">AI Konsultasi &amp; Prediksi</h2>
+      <p class="muted">Prefix: <code>/chatKonsul</code> (semua endpoint di sini membutuhkan cookie <code>accessToken</code>)</p>
+
+      <h3 id="ai-konsul"><span class="pill method">POST</span> <code>/chatKonsul/konsul</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
+        <tr><th>Content-Type</th><td><code>application/json</code></td></tr>
+        <tr><th>Body</th><td>
+          <ul>
+            <li><code>umkmId</code> (string, required)</li>
+            <li><code>message</code> (string, required)</li>
+            <li><code>chatHistory</code> (optional; array/object)</li>
+          </ul>
+        </td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Konsultasi AI berhasil diproses",
+  "data": { "replay": "(hasil processAiKonsulResponse)" }
+}</pre>
+        </td></tr>
+        <tr><th>Response 403</th><td>
+          <pre>{
+  "status": "failed",
+  "message": "Akses ditolak"
+}</pre>
+        </td></tr>
+      </table>
+
+      <h3 id="ai-predict"><span class="pill method">GET</span> <code>/chatKonsul/predict/:umkmId</code></h3>
+      <table>
+        <tr><th>Auth</th><td>Wajib cookie <code>accessToken</code> dan UMKM harus milik user</td></tr>
+        <tr><th>Response 200</th><td>
+          <pre>{
+  "status": "success",
+  "message": "Prediksi berhasil ditarik",
+  "data": {
+    "prediction_tomorrow": 0,
+    "scale": "(prediction_scale)"
+  }
+}</pre>
+        </td></tr>
+        <tr><th>Response 503</th><td>
+          <pre>{
+  "status": "failed",
+  "message": "Server AI Machine Learning sedang sibuk/mati"
 }</pre>
         </td></tr>
       </table>
@@ -701,26 +771,28 @@
       <h2 id="uploads">Uploads (Static)</h2>
       <p>Server mengekspose static folder <code>server/public/uploads</code> melalui path <code>/uploads</code>.</p>
 
-      <h3 id="uploads-profile-photo"><span class="pill method">GET</span> <code>/uploads/profiles/:filename</code></h3>
+      <h3 id="uploads-example"><span class="pill method">GET</span> <code>/uploads/&lt;path&gt;</code></h3>
       <table>
         <tr><th>Auth</th><td>Tidak perlu</td></tr>
-        <tr><th>Response 200</th><td>Binary file (image)</td></tr>
-        <tr><th>Contoh</th><td><code>http://localhost:3000/uploads/profiles/1710000000000-123.png</code></td></tr>
+        <tr><th>Response</th><td>Binary file (image)</td></tr>
+        <tr><th>Contoh</th><td><code>http://localhost:5000/uploads/profiles/any.png</code></td></tr>
       </table>
+
+      <div class="muted">Catatan: endpoint Profile/UMKM upload saat ini memakai Cloudinary; section ini hanya untuk file yang memang ada di <code>server/public/uploads</code>.</div>
     </section>
 
     <section class="card" style="margin-top: 16px;">
-      <h2 id="notes">Catatan Penting</h2>
+      <h2 id="notes">Catatan</h2>
       <ul>
-        <li>Semua endpoint selain <code>/auth/*</code> membutuhkan cookie <code>accessToken</code> (httpOnly). Client harus mengirim cookie dengan <code>credentials: 'include'</code>.</li>
-        <li>Jika terjadi error validasi, response mengikuti format <code>message: "Validasi Gagal"</code> dengan <code>errors</code> per field.</li>
-        <li>Beberapa endpoint delete/logout mengembalikan <code>data</code> bertipe string (sesuai pemanggilan helper <code>success()</code>).</li>
-        <li>Nama field transaksi memang <code>amout</code> (bukan <code>amount</code>) sesuai validator dan route.</li>
+        <li>Endpoint yang <strong>tidak butuh</strong> cookie <code>accessToken</code>: <code>/auth/register</code>, <code>/auth/login</code>, <code>/auth/refresh-token</code>.</li>
+        <li>Endpoint <code>/auth/users*</code> membutuhkan role <code>admin</code> (role dicek dari payload JWT di cookie).</li>
+        <li>Upload foto (UMKM/Profile) memakai Cloudinary via <code>multer-storage-cloudinary</code>. Field file harus bernama <code>photo</code>.</li>
+        <li>Transaksi menggunakan <code>amount</code> (number) dan <code>type</code> bernilai <code>income</code> / <code>expense</code> sesuai validator.</li>
       </ul>
     </section>
 
     <footer class="muted" style="margin: 28px 0 6px;">
-      Generated: May 6, 2026
+      Generated: June 1, 2026
     </footer>
   </main>
 </body>
