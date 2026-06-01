@@ -25,12 +25,14 @@ Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediks
 ## 📸 *Screenshots* Aplikasi
 
 | Halaman Login | Halaman Register |
+| :---: | :---: |
+| ![Login](<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/bc256088-dfd7-4906-a668-594f6a83be88" />
+) | ![Register](<img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/cdf6e9e0-23ed-4904-b2ee-fe5c1cc1448d" />
 
-| <img width="1919" height="870" alt="image" src="https://github.com/user-attachments/assets/dcd2b146-9854-411f-9f4a-d81af2915d27" />
- | <img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/026febba-c542-436f-938e-b0407804d87e" />
- |
+) |
 
-| Dashboard UMKM | Laporan Transaksi |
+| Dashboard UMKM | Laporan Transaksi |![Uploading image.png…]()
+
 | :---: | :---: |
 | ![Dashboard](./path-to-dashboard-image.jpg) | ![Transaksi](./path-to-transaksi-image.jpg) |
 
@@ -56,4 +58,3 @@ Ikuti langkah-langkah detail berikut untuk menjalankan CuanSync di komputer loka
 ```bash
 git clone [https://github.com/UsernameAnda/cuansync.git](https://github.com/UsernameAnda/cuansync.git)
 cd cuansync
-
