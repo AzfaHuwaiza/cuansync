@@ -1,6 +1,10 @@
 # 🚀 CuanSync - Solusi Cerdas Manajemen UMKM
 
-![CuanSync Banner](./link-gambar-banner-atau-login.jpg) ## 1. Deskripsi Singkat Project
+<div align="center">
+  <img width="800" alt="CuanSync Banner" src="https://github.com/user-attachments/assets/c9bdf0ff-e045-4a3f-a253-f64354b359de" />
+</div>
+
+## 1. Deskripsi Singkat Project
 **CuanSync** adalah aplikasi berbasis *web* (Full-Stack) yang dirancang khusus untuk membantu para pelaku UMKM (Usaha Mikro, Kecil, dan Menengah) dalam mengelola bisnis mereka secara digital. Aplikasi ini memungkinkan pengguna untuk memantau statistik keuangan (pemasukan & pengeluaran), mengelola daftar produk, mencatat laporan transaksi kas, hingga membangun jejaring bisnis antar sesama UMKM. 
 
 Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediksi arus kas dan rekomendasi bisnis secara pintar.
@@ -25,22 +29,24 @@ Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediks
 ## 📸 *Screenshots* Aplikasi
 
 | Halaman Login | Halaman Register |
-| :<img width="1919" height="870" alt="image" src="https://github.com/user-attachments/assets/c9bdf0ff-e045-4a3f-a253-f64354b359de" />
-: | :<img width="1919" height="872" alt="image" src="https://github.com/user-attachments/assets/0aa1a923-fd41-4612-a75e-ea23fda5f186" />
-: |
+| :---: | :---: |
+| <img width="500" alt="Login" src="https://github.com/user-attachments/assets/c9bdf0ff-e045-4a3f-a253-f64354b359de" /> | <img width="500" alt="Register" src="https://github.com/user-attachments/assets/0aa1a923-fd41-4612-a75e-ea23fda5f186" /> |
 
+| Dashboard UMKM | Analitik Keuangan |
+| :---: | :---: |
+| <img width="500" alt="Dashboard" src="https://github.com/user-attachments/assets/bb1689ba-8406-4634-a6f5-aa0b15a6c794" /> | <img width="500" alt="Analitik" src="https://github.com/user-attachments/assets/668ebcb2-f62c-4ee0-877c-8ce6ad89b570" /> |
 
-| Dashboard UMKM | Laporan Transaksi |
-| <img width="1557" height="868" alt="image" src="https://github.com/user-attachments/assets/bb1689ba-8406-4634-a6f5-aa0b15a6c794" />
-<img width="1558" height="867" alt="image" src="https://github.com/user-attachments/assets/668ebcb2-f62c-4ee0-877c-8ce6ad89b570" />
- | <img width="1560" height="871" alt="image" src="https://github.com/user-attachments/assets/ea771870-7600-466d-934e-830b47b2851c" />
- |
- <img width="1556" height="865" alt="image" src="https://github.com/user-attachments/assets/c5a29bf7-9185-45d4-925d-01046552542d" />
- <img width="1553" height="869" alt="image" src="https://github.com/user-attachments/assets/43ecea86-5f36-48fc-8ca4-f568bb674a3c" />
-<img width="1554" height="871" alt="image" src="https://github.com/user-attachments/assets/6fdbfc0f-b2a9-44c2-a15c-32a2f4dd26db" />
-<img width="1556" height="867" alt="image" src="https://github.com/user-attachments/assets/e0fb4f98-1c30-4ee0-8687-c0b62a9a4dfa" />
-<img width="1559" height="858" alt="image" src="https://github.com/user-attachments/assets/c9d5c408-f634-4929-8136-e042f11e17d7" />
+| Laporan Transaksi | Manajemen Produk |
+| :---: | :---: |
+| <img width="500" alt="Transaksi" src="https://github.com/user-attachments/assets/ea771870-7600-466d-934e-830b47b2851c" /> | <img width="500" alt="Produk" src="https://github.com/user-attachments/assets/c5a29bf7-9185-45d4-925d-01046552542d" /> |
 
+| Jejaring Bisnis | Detail Jejaring |
+| :---: | :---: |
+| <img width="500" alt="Jejaring" src="https://github.com/user-attachments/assets/43ecea86-5f36-48fc-8ca4-f568bb674a3c" /> | <img width="500" alt="Detail Jejaring" src="https://github.com/user-attachments/assets/6fdbfc0f-b2a9-44c2-a15c-32a2f4dd26db" /> |
+
+| Profil User | Tampilan Tambahan |
+| :---: | :---: |
+| <img width="500" alt="Profil" src="https://github.com/user-attachments/assets/e0fb4f98-1c30-4ee0-8687-c0b62a9a4dfa" /> | <img width="500" alt="Tambahan" src="https://github.com/user-attachments/assets/c9d5c408-f634-4929-8136-e042f11e17d7" /> |
 
 ---
 
@@ -60,7 +66,7 @@ Ikuti langkah-langkah detail berikut untuk menjalankan CuanSync di komputer loka
 
 ### Langkah 1: *Clone Repository*
 ```bash
-git clone [https://github.com/AzfaHuwaiza/cuansync]
+git clone [https://github.com/AzfaHuwaiza/cuansync.git](https://github.com/AzfaHuwaiza/cuansync.git)
 cd cuansync
 
 Langkah 2: Setup Database Lokal
@@ -109,7 +115,7 @@ npm run dev
 (Pastikan muncul tulisan "Database terhubung" di terminal).
 
 Langkah 4: Setup & Jalankan Frontend
-Buka terminal baru dan masuk ke folder client/frontend:
+Buka terminal baru dan masuk ke folder client:
 
 Bash
 cd client
@@ -133,4 +139,4 @@ Cara mendapatkan akses: Anda harus mendaftar dan men-generate API Key secara man
 
 Implementasi: Setelah mendapatkan API Key, masukkan key tersebut ke dalam file .env di bagian backend (GEMINI_API_KEY).
 
-Dibuat oleh [CC26-PSU086]
+Dibuat oleh Tim [CC26-PSU086]
