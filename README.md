@@ -25,13 +25,12 @@ Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediks
 ## 📸 *Screenshots* Aplikasi
 
 | Halaman Login | Halaman Register |
-| ![Login](<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/bc256088-dfd7-4906-a668-594f6a83be88" />
-) | ![Register](<img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/cdf6e9e0-23ed-4904-b2ee-fe5c1cc1448d" />
+| :<img width="1919" height="869" alt="image" src="https://github.com/user-attachments/assets/3eca9e7d-d834-4329-afa5-707488c7012f" />
+: | :<img width="1919" height="878" alt="image" src="https://github.com/user-attachments/assets/aa78e7f7-9d8e-44c5-94dd-83e51093bf3d" />
+: |
+| ![Login]([./path-to-login-image.jpg](https://cuansync-iqbalsypk-three.vercel.app/login)) | ![Register]([./path-to-register-image.jpg](https://cuansync-iqbalsypk-three.vercel.app/register)) |
 
-) |
-
-| Dashboard UMKM | Laporan Transaksi |![Uploading image.png…]()
-
+| Dashboard UMKM | Laporan Transaksi |
 | :---: | :---: |
 | ![Dashboard](./path-to-dashboard-image.jpg) | ![Transaksi](./path-to-transaksi-image.jpg) |
 
