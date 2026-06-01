@@ -25,7 +25,6 @@ Aplikasi ini juga terintegrasi dengan kecerdasan buatan untuk memberikan prediks
 ## 📸 *Screenshots* Aplikasi
 
 | Halaman Login | Halaman Register |
-| :---: | :---: |
 | ![Login](<img width="1919" height="873" alt="image" src="https://github.com/user-attachments/assets/bc256088-dfd7-4906-a668-594f6a83be88" />
 ) | ![Register](<img width="1919" height="866" alt="image" src="https://github.com/user-attachments/assets/cdf6e9e0-23ed-4904-b2ee-fe5c1cc1448d" />
 
